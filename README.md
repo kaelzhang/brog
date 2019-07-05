@@ -1,17 +1,7 @@
+# ![brog](assets/brog.png)
+
 [![Build Status](https://travis-ci.org/kaelzhang/brog.svg?branch=master)](https://travis-ci.org/kaelzhang/brog)
 [![Coverage](https://codecov.io/gh/kaelzhang/brog/branch/master/graph/badge.svg)](https://codecov.io/gh/kaelzhang/brog)
-<!-- optional appveyor tst
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/kaelzhang/brog?branch=master&svg=true)](https://ci.appveyor.com/project/kaelzhang/brog)
--->
-<!-- optional npm version
-[![NPM version](https://badge.fury.io/js/brog.svg)](http://badge.fury.io/js/brog)
--->
-<!-- optional npm downloads
-[![npm module downloads per month](http://img.shields.io/npm/dm/brog.svg)](https://www.npmjs.org/package/brog)
--->
-<!-- optional dependency status
-[![Dependency Status](https://david-dm.org/kaelzhang/brog.svg)](https://david-dm.org/kaelzhang/brog)
--->
 
 # brog
 
