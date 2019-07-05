@@ -1,0 +1,48 @@
+{
+  "name": "brog",
+  "version": "1.0.0",
+  "description": "A tool for managing multiple related JavaScript projects, the better replacement of lerna",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "NODE_DEBUG=brog nyc ava --timeout=10s --verbose",
+    "test:dev": "NODE_DEBUG=brog nyc ava --timeout=10s --verbose && npm run report:dev",
+    "lint": "eslint .",
+    "fix": "eslint . --fix",
+    "posttest": "npm run report",
+    "report": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "report:dev": "nyc report --reporter=html && npm run report:open",
+    "report:open": "open coverage/index.html"
+  },
+  "files": [
+    "src/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kaelzhang/brog.git"
+  },
+  "keywords": [
+    "brog"
+  ],
+  "engines": {
+    "node": ">= 6"
+  },
+  "ava": {
+    "babel": false,
+    "files": [
+      "test/*.test.js"
+    ]
+  },
+  "author": "kaelzhang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kaelzhang/brog/issues"
+  },
+  "devDependencies": {
+    "@ostai/eslint-config": "^3.2.0",
+    "ava": "^2.1.0",
+    "codecov": "^3.5.0",
+    "eslint": "^6.0.1",
+    "eslint-plugin-import": "^2.18.0",
+    "nyc": "^14.1.1"
+  }
+}
