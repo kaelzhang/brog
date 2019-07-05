@@ -1,7 +1,10 @@
 {
   "name": "brog",
-  "version": "1.0.0",
+  "version": "0.0.0-alpha",
   "description": "A tool for managing multiple related JavaScript projects, the better replacement of lerna",
+  "bin": {
+    "brog": "bin/cli.js"
+  },
   "main": "src/index.js",
   "scripts": {
     "test": "NODE_DEBUG=brog nyc ava --timeout=10s --verbose",
