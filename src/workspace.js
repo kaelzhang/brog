@@ -2,26 +2,31 @@ const path = require('path')
 const fs = require('fs-extra')
 const globby = require('globby')
 const home = require('home')
+const {
+  parse,
+  stringify,
+  assign
+} = require('comment-json')
 
 const error = require('./error')
 const {exists} = require('./utils')
 
-// const HOME = home()
-const NPM_WORKSTATION = '.npm-workstation'
-const EMPTY_WORKSTATION = {
+const BROG = '.brog'
+const BROG_WORKSPACE = '.brog-workspace'
+const EMPTY_WORKSPACE = parse(`{
   projects: []
-}
+}`)
 
-class Workstation {
+class Workspace {
   constructor (root) {
     this._root = root
   }
 
   exists (name) {
-    const workstationFile = this._getWSFile(name)
+    const workspaceFile = this._getWSFile(name)
 
-    if (exists(workstationFile)) {
-      return workstationFile
+    if (exists(workspaceFile)) {
+      return workspaceFile
     }
   }
 
@@ -32,17 +37,17 @@ class Workstation {
       return
     }
 
-    const workstation = fs.readJsonSync(file)
-    return workstation
+    const workspace = fs.readJsonSync(file)
+    return workspace
   }
 
   _getWSFile (name) {
     return path.join(
-      this._root, NPM_WORKSTATION, name + NPM_WORKSTATION)
+      this._root, BROG, name + BROG_WORKSPACE)
   }
 
   _getCurrentNameFile () {
-    return path.join(this._root, NPM_WORKSTATION, 'CURRENT')
+    return path.join(this._root, BROG, 'CURRENT')
   }
 
   currentName () {
@@ -73,32 +78,33 @@ class Workstation {
   }
 
   async create (name) {
-    return this.save({
-      ...EMPTY_WORKSTATION,
+    const config = assign({
       name
-    })
+    }, EMPTY_WORKSPACE)
+
+    return this.save(config)
   }
 
   async save (ws) {
     return fs.outputFile(this._getWSFile(ws.name),
-      JSON.stringify(ws, null, 2))
+      stringify(ws, null, 2))
   }
 
   async allNames () {
-    const cwd = path.join(this._root, NPM_WORKSTATION)
+    const cwd = path.join(this._root, BROG)
     if (!exists(cwd)) {
       return []
     }
 
-    const files = await globby(['*.npm-workstation'], {
+    const files = await globby(['*.brog-workspace'], {
       cwd
     })
 
-    return files.map(f => path.basename(f, NPM_WORKSTATION))
+    return files.map(f => path.basename(f, BROG))
   }
 }
 
 module.exports = {
-  Workstation,
-  workstation: new Workstation(home())
+  Workspace,
+  workspace: new Workspace(home())
 }

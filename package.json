@@ -41,11 +41,20 @@
     "url": "https://github.com/kaelzhang/brog/issues"
   },
   "devDependencies": {
-    "@ostai/eslint-config": "^3.2.0",
-    "ava": "^2.1.0",
+    "@ostai/eslint-config": "^3.3.1",
+    "ava": "^2.2.0",
     "codecov": "^3.5.0",
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.18.0",
     "nyc": "^14.1.1"
+  },
+  "dependencies": {
+    "bin-tool": "^1.0.2",
+    "comment-json": "^2.1.0",
+    "err-object": "^5.1.2",
+    "fs-chmod": "^1.0.6",
+    "fs-extra": "^8.1.0",
+    "globby": "^10.0.1",
+    "home": "^2.0.0"
   }
 }
