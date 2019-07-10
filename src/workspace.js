@@ -14,7 +14,7 @@ const {exists} = require('./utils')
 const BROG = '.brog'
 const BROG_WORKSPACE = '.brog-workspace'
 const EMPTY_WORKSPACE = parse(`{
-  projects: []
+  "projects": []
 }`)
 
 class Workspace {

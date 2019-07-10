@@ -1,4 +1,4 @@
-// Publish the workstation
+// Publish the workspace
 
 // 1. Publish
 // npmw publish -- [npm-publish-options]
@@ -6,20 +6,20 @@
 const path = require('path')
 const {Command} = require('bin-tool')
 
-const {workstation} = require('../../src/read-workstation')
+const {workspace} = require('../../src/workspace')
 
 module.exports = class CreateCommand extends Command {
   get description () {
-    return 'create a workstation'
+    return 'create a workspace'
   }
 
-  constructor (raw) {
-    super(raw)
+  constructor () {
+    super()
 
     this.options = {
       use: {
         type: 'boolean',
-        description: 'create and use the workstation created just now'
+        description: 'create and use the workspace created just now'
       }
     }
   }
@@ -32,15 +32,15 @@ module.exports = class CreateCommand extends Command {
       throw new Error('name must be provided')
     }
 
-    const names = await workstation.allNames()
+    const names = await workspace.allNames()
     if (names.includes(name)) {
       throw new Error(`name "${name}" already exists`)
     }
 
-    await workstation.create(name)
+    await workspace.create(name)
 
     if (argv.use) {
-      await workstation.setCurrentName(name)
+      await workspace.setCurrentName(name)
     }
   }
 }

@@ -21,11 +21,11 @@ Generally, if you want to do something as lerna does, and you don't want a monor
 # Install brog
 npm i -g brog
 
-# Create a workstation
+# Create a workspace
 brog create foo
 
 cd /path/to/project-1
-# Add the current directory to workstation foo,
+# Add the current directory to workspace foo,
 brog add . foo
 #  or you can use `npmw add /path/to/project-1 foo`
 
@@ -36,7 +36,7 @@ brog add /path/to/project-2 foo
 brog publish
 ```
 
-A vscode extension is also available to help it much easier to add repos into a single workstation.
+A vscode extension is also available to help it much easier to add repos into a single workspace.
 
 ## Commands
 

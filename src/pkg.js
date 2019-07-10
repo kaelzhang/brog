@@ -42,7 +42,7 @@ class PackageCollection {
 
     for (const [name, pkg] of Object.entries(this._packages)) {
       if (!pkg.packageJson) {
-        // Delete packages that is not included by the current workstation
+        // Delete packages that is not included by the current workspace
         delete this._packages[name]
       }
     }

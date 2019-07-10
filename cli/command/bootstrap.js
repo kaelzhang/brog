@@ -1,4 +1,4 @@
-// Initialize workstation
+// Initialize workspace
 // link dependencies
 
 const path = require('path')
@@ -13,16 +13,16 @@ module.exports = class StartCommand extends Command {
     return 'initialize and link projects'
   }
 
-  constructor (raw) {
-    super(raw)
+  constructor () {
+    super()
 
     this.options = {
-      workstation: options.workstation({
-        useProjectWorkstation: true
+      workspace: options.workspace({
+        useProjectWorkspace: true
       })
     }
 
-    this.usage = `npmw bootstrap <workstation>
+    this.usage = `npmw bootstrap <workspace>
 npmw bootstrap [options]`
   }
 
@@ -30,7 +30,7 @@ npmw bootstrap [options]`
     argv
   }) {
     const pc = new PackageCollection({
-      projects: argv.workstation.projects
+      projects: argv.workspace.projects
     })
 
     await pc.process()

@@ -1,25 +1,25 @@
 // List all related repos
 
 // npmw ls
-// npmw ls <workstation>
+// npmw ls <workspace>
 
 const path = require('path')
 const {Command} = require('bin-tool')
 const chalk = require('chalk')
 
-const {workstation} = require('../../src/read-workstation')
+const {workspace} = require('../../src/workspace')
 const options = require('../options')
 
 module.exports = class StartCommand extends Command {
   get description () {
-    return 'list all workstations'
+    return 'list all workspaces'
   }
 
-  constructor (raw) {
-    super(raw)
+  constructor () {
+    super()
 
     this.options = {
-      workstation: options.optionalWorkstation
+      workspace: options.optionalWorkspace
     }
   }
 
@@ -27,22 +27,22 @@ module.exports = class StartCommand extends Command {
     cwd,
     argv
   }) {
-    if (!argv.workstation) {
+    if (!argv.workspace) {
       return this._listAll()
     }
 
-    return this._list(argv.workstation, cwd)
+    return this._list(argv.workspace, cwd)
   }
 
   async _list (name, cwd) {
-    const ws = workstation.get(name)
+    const ws = workspace.get(name)
     if (!ws) {
-      throw new Error(`workstation "${name}" not found`)
+      throw new Error(`workspace "${name}" not found`)
     }
 
     const {projects} = ws
 
-    console.log(`workstation "${name}":`)
+    console.log(`workspace "${name}":`)
 
     if (!projects.length) {
       console.log(`  ${chalk.cyan('<no projects>')}`)
@@ -58,8 +58,13 @@ module.exports = class StartCommand extends Command {
   }
 
   async _listAll () {
-    const names = await workstation.allNames()
-    const current = workstation.currentName()
+    const names = await workspace.allNames()
+    const current = workspace.currentName()
+
+    if (names.length === 0) {
+      console.log(chalk.gray('<no workspaces>'))
+      return
+    }
 
     for (const name of names) {
       if (name === current) {

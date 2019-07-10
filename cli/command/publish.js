@@ -1,4 +1,4 @@
-// Publish the workstation
+// Publish the workspace
 
 // 1. Publish
 // npmw publish -- [npm-publish-options]
@@ -10,13 +10,13 @@ const options = require('../options')
 const {PackageCollection} = require('../../src/pkg')
 
 module.exports = class StartCommand extends Command {
-  constructor (raw) {
-    super(raw)
+  constructor () {
+    super()
 
     this.options = {
       cwd: options.cwd,
-      workstation: options.workstation({
-        useProjectWorkstation: true,
+      workspace: options.workspace({
+        useProjectWorkspace: true,
         useCurrent: true
       })
     }
@@ -26,7 +26,7 @@ module.exports = class StartCommand extends Command {
     argv
   }) {
     const pc = new PackageCollection({
-      projects: argv.workstation.projects
+      projects: argv.workspace.projects
     })
 
     await pc.process()

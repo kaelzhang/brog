@@ -1,33 +1,33 @@
-// Add a directory into the workstation
+// Add a directory into the workspace
 
-// npmw add <path> <workstation> [options]
-// npmw add <path> <workstation> --lerna
+// npmw add <path> <workspace> [options]
+// npmw add <path> <workspace> --lerna
 
 const path = require('path')
 const {Command} = require('bin-tool')
 
-const {workstation} = require('../../src/read-workstation')
+const {workspace} = require('../../src/workspace')
 const options = require('../options')
 
 module.exports = class StartCommand extends Command {
   get description () {
-    return 'add a project directory into a workstation'
+    return 'add a project directory into a workspace'
   }
 
-  constructor (raw) {
-    super(raw)
+  constructor () {
+    super()
 
     this.options = {
       cwd: options.cwd,
-      workstation: options.workstation({
+      workspace: options.workspace({
         useCurrent: true
       })
     }
 
     // npmw add -w foo: add current directory to foo
-    // npmw add: add the current directory to current workstation
+    // npmw add: add the current directory to current workspace
     // npmw add -w foo --cwd /path/to: add /path/to to foo
-    this.usage = `npmw add [workstation] [options]
+    this.usage = `npmw add [workspace] [options]
 npmw add [options]`
   }
 
@@ -35,12 +35,12 @@ npmw add [options]`
     argv
   }) {
     const {cwd} = argv
-    const ws = argv.workstation
+    const ws = argv.workspace
     const {projects} = ws
     const index = projects.findIndex(project => project.path === cwd)
 
     if (~ index) {
-      console.log(`"${path}" already in workstation "${ws.name}"`)
+      console.log(`"${path}" already in workspace "${ws.name}"`)
       return
     }
 
@@ -48,6 +48,6 @@ npmw add [options]`
       path: cwd
     })
 
-    await workstation.save(ws)
+    await workspace.save(ws)
   }
 }

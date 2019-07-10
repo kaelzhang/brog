@@ -1,44 +1,44 @@
 const path = require('path')
 
-const {workstation} = require('../src/read-workstation')
+const {workspace} = require('../src/workspace')
 
-exports.workstation = ({
-  // Use the project workstation: TODO
-  useProjectWorkstation,
-  // Use the current workstation name
+exports.workspace = ({
+  // Use the project workspace: TODO
+  useProjectWorkspace,
+  // Use the current workspace name
   useCurrent
 } = {}) => ({
   type: 'string',
   alias: 'w',
-  description: 'specify the current used workstation',
+  description: 'specify the current used workspace',
   async default () {
     let [ws] = this.rawParent._
 
     if (!ws && useCurrent) {
-      ws = workstation.currentName()
+      ws = workspace.currentName()
     }
 
     if (!ws) {
-      throw new Error('workstation must be specified')
+      throw new Error('workspace must be specified')
     }
 
     return ws
   },
 
   set (name) {
-    const ws = workstation.get(name)
+    const ws = workspace.get(name)
     if (!ws) {
-      throw new Error(`workstation "${name}" not found`)
+      throw new Error(`workspace "${name}" not found`)
     }
 
     return ws
   }
 })
 
-exports.optionalWorkstation = {
+exports.optionalWorkspace = {
   type: 'string',
   alias: 'w',
-  description: 'specify the current used workstation',
+  description: 'specify the current used workspace',
   default () {
     const [w] = this.rawParent._
     if (w) {
@@ -51,5 +51,5 @@ exports.cwd = {
   type: 'string',
   description: 'set the current working directory',
   default: process.cwd(),
-  set: v => path.resolve(v)
+  set: path.resolve
 }

@@ -1,13 +1,13 @@
-// Use some workstation
+// Use some workspace
 
 const path = require('path')
 const {Command} = require('bin-tool')
 
-const {workstation} = require('../../src/read-workstation')
+const {workspace} = require('../../src/workspace')
 
 module.exports = class StartCommand extends Command {
   get description () {
-    return 'set the current workstation'
+    return 'set the current workspace'
   }
 
   async run ({
@@ -18,12 +18,12 @@ module.exports = class StartCommand extends Command {
       throw new Error('name must be provided')
     }
 
-    const current = workstation.currentName()
+    const current = workspace.currentName()
     if (current === name) {
-      console.log(`"${name}" is already the current workstation`)
+      console.log(`"${name}" is already the current workspace`)
       process.exit(0)
     }
 
-    await workstation.setCurrentName(name)
+    await workspace.setCurrentName(name)
   }
 }
