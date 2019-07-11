@@ -5,9 +5,11 @@
 
 const path = require('path')
 const {Command} = require('../command')
+const options = require('../options')
 
 const {workspace} = require('../../src/workspace')
-const options = require('../options')
+const {getCommitHead} = require('../../src/git')
+
 
 module.exports = class StartCommand extends Command {
   get description () {
@@ -45,7 +47,10 @@ brog add [options]`
     }
 
     projects.push({
-      path: cwd
+      path: cwd,
+
+      // Adds the current commitHead to the project
+      commitHead: await getCommitHead(cwd)
     })
 
     await workspace.save(ws)

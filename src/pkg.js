@@ -32,12 +32,12 @@ class PackageCollection {
   constructor ({
     projects
   }) {
-    this._projects = projects
+    this.projects = projects
     this._packages = Object.create(null)
   }
 
   async process () {
-    const tasks = this._projects.map(project => this._processOne(project))
+    const tasks = this.projects.map(project => this._processOne(project))
     await Promise.all(tasks)
 
     for (const [name, pkg] of Object.entries(this._packages)) {

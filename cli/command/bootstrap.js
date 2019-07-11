@@ -17,11 +17,15 @@ module.exports = class StartCommand extends Command {
     super()
 
     this.options = {
+      cwd: options.cwd,
       workspace: options.workspace({
-        useProjectWorkspace: true
+        useProjectWorkspace: true,
+        useArgvRest: 0
       })
     }
 
+    // brog bootstrap foo
+    // brog bootstrap -w foo
     this.usage = `brog bootstrap <workspace>
 brog bootstrap [options]`
   }

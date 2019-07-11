@@ -38,8 +38,8 @@ class Workspace {
       return
     }
 
-    const workspace = fs.readJsonSync(file)
-    return workspace
+    const workspace = fs.readFileSync(file)
+    return parse(workspace.toString())
   }
 
   _getWSFile (name) {

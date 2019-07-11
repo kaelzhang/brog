@@ -1,20 +1,24 @@
 const path = require('path')
-const fs = require('fs-extra')
+const readJson = require('read-package-json')
 
 const {error} = require('./error')
 
 const read = async dir => {
   const packageJson = path.join(dir, 'package.json')
 
-  try {
-    return await fs.readJson(packageJson)
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      throw error('PKG_NOT_FOUND', dir)
-    }
+  return new Promise((resolve, reject) => {
+    readJson(packageJson, (err, data) => {
+      if (!err) {
+        return resolve(data)
+      }
 
-    throw error('READ_PKG_FAILS', packageJson)
-  }
+      if (err.code === 'ENOENT') {
+        return reject(error('PKG_NOT_FOUND', dir))
+      }
+
+      throw error('READ_PKG_FAILS', packageJson)
+    })
+  })
 }
 
 // resolve package.bin
@@ -34,6 +38,7 @@ const cleanBin = (cwd, bin) => {
 
 module.exports = async dir => {
   const raw = await read(dir)
+
   const packageJson = {
     ...raw
   }

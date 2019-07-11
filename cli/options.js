@@ -1,4 +1,5 @@
 const path = require('path')
+const {isNumber} = require('core-util-is')
 
 const {workspace} = require('../src/workspace')
 
@@ -7,14 +8,19 @@ exports.workspace = ({
   // use the workspace which the current project belongs to
   useProjectWorkspace,
   // Use the current workspace name
-  useCurrent
+  useCurrent,
+  useArgvRest
 } = {}) => ({
   alias: 'w',
   description: 'specify the current used workspace',
   async default () {
     let ws
 
-    if (useCurrent) {
+    if (isNumber(useArgvRest)) {
+      ws = this.rawParent._[useArgvRest]
+    }
+
+    if (!ws && useCurrent) {
       ws = workspace.currentName()
     }
 
