@@ -12,7 +12,7 @@ const options = require('../options')
 
 module.exports = class StartCommand extends Command {
   get description () {
-    return 'list all workspaces'
+    return 'list all workspaces or projects of a specified workspace'
   }
 
   constructor () {

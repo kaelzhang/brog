@@ -15,7 +15,7 @@ module.exports = class StartCommand extends Command {
   }) {
     const [name] = argv._
     if (!name) {
-      throw new Error('name must be provided')
+      throw new Error('workspace must be provided')
     }
 
     const current = workspace.currentName()

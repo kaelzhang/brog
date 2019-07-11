@@ -5,6 +5,7 @@
 
 const path = require('path')
 const chalk = require('chalk')
+const log = require('util').debuglog('brog')
 
 const {Command} = require('../command')
 const options = require('../options')
@@ -19,8 +20,7 @@ module.exports = class StartCommand extends Command {
     this.options = {
       cwd: options.cwd,
       workspace: options.workspace({
-        useProjectWorkspace: true,
-        useCurrent: true
+        useProjectWorkspace: true
       })
     }
   }
@@ -37,6 +37,8 @@ module.exports = class StartCommand extends Command {
       console.log(chalk.gray('no changes'))
       return
     }
+
+    log('changed projects: %j', changed)
 
     const pc = new PackageCollection({
       projects

@@ -4,7 +4,6 @@ const {isNumber} = require('core-util-is')
 const {workspace} = require('../src/workspace')
 
 exports.workspace = ({
-  // Use the project workspace: TODO
   // use the workspace which the current project belongs to
   useProjectWorkspace,
   // Use the current workspace name
@@ -22,6 +21,10 @@ exports.workspace = ({
 
     if (!ws && useCurrent) {
       ws = workspace.currentName()
+    }
+
+    if (!ws && useProjectWorkspace) {
+      // TODO
     }
 
     if (!ws) {
