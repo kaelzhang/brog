@@ -17,6 +17,7 @@ class Package {
     this.rawPackageJson = null
     this.lastCommitHead = null
     this.path = null
+    this.updates = Object.create(null)
   }
 
   addDependent (pkg, type) {
@@ -76,6 +77,8 @@ class Package {
   _updateDepVersion (dep, version, host) {
     const origin = host[dep]
     const first = origin.charAt(0)
+
+    this.updates[dep] = version
 
     // ^1.0.0
     // ~1.0.0

@@ -18,6 +18,36 @@ const EMPTY_WORKSPACE = parse(`{
 }`)
 
 class Workspace {
+  constructor (filepath, config) {
+    this.path = filepath
+    this.config = config
+  }
+
+  get name () {
+    return this.config.name
+  }
+
+  get projects () {
+    return this.config.projects
+  }
+
+  // Save workspace
+  async save () {
+    return fs.outputFile(this.path, stringify(this.config, null, 2))
+  }
+
+  // Get project by path
+  projectByPath (fullpath) {
+    for (const project of this.projects) {
+      if (project.path === fullpath) {
+        return project
+      }
+    }
+  }
+}
+
+// All workspaces
+class Workspaces {
   constructor (root) {
     this._root = root
   }
@@ -38,8 +68,8 @@ class Workspace {
       return
     }
 
-    const workspace = fs.readFileSync(file)
-    return parse(workspace.toString())
+    const content = fs.readFileSync(file)
+    return new Workspace(file, parse(content.toString()))
   }
 
   _getWSFile (name) {
@@ -83,12 +113,9 @@ class Workspace {
       name
     }, EMPTY_WORKSPACE)
 
-    return this.save(config)
-  }
+    const workspace = new Workspace(this._getWSFile(name), config)
 
-  async save (ws) {
-    return fs.outputFile(this._getWSFile(ws.name),
-      stringify(ws, null, 2))
+    return workspace.save()
   }
 
   async allNames () {
@@ -106,6 +133,6 @@ class Workspace {
 }
 
 module.exports = {
-  Workspace,
-  workspace: new Workspace(home())
+  Workspaces,
+  workspaces: new Workspaces(home())
 }

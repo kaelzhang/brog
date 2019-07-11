@@ -13,6 +13,7 @@ const options = require('../options')
 const {PackageCollection} = require('../../src/pc')
 const {
   getChanged,
+  addDependentsToChanged,
   sortChanged,
   bumpVersionAndCommit
 } = require('../../src/upgrade')
@@ -50,7 +51,9 @@ module.exports = class StartCommand extends Command {
 
     await pc.process()
 
+    addDependentsToChanged(changed, pc, workspace)
     sortChanged(changed, pc)
+
     await bumpVersionAndCommit(changed, pc, workspace)
   }
 }

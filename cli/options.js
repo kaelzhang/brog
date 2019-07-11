@@ -1,7 +1,7 @@
 const path = require('path')
 const {isNumber} = require('core-util-is')
 
-const {workspace} = require('../src/workspace')
+const {workspaces} = require('../src/workspace')
 
 exports.workspace = ({
   // use the workspace which the current project belongs to
@@ -20,7 +20,7 @@ exports.workspace = ({
     }
 
     if (!ws && useCurrent) {
-      ws = workspace.currentName()
+      ws = workspaces.currentName()
     }
 
     if (!ws && useProjectWorkspace) {
@@ -39,7 +39,7 @@ exports.workspace = ({
       throw new Error(`workspace is required`)
     }
 
-    const ws = workspace.get(name)
+    const ws = workspaces.get(name)
     if (!ws) {
       throw new Error(`workspace "${name}" not found`)
     }

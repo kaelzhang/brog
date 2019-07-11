@@ -7,7 +7,6 @@ const path = require('path')
 const {Command} = require('../command')
 const options = require('../options')
 
-const {workspace} = require('../../src/workspace')
 const {getCommitHead} = require('../../src/git')
 
 
@@ -37,12 +36,12 @@ brog add [options]`
     argv
   }) {
     const {cwd} = argv
-    const ws = argv.workspace
-    const {projects} = ws
+    const {workspace} = argv
+    const {projects} = workspace
     const index = projects.findIndex(project => project.path === cwd)
 
     if (~ index) {
-      console.log(`"${cwd}" already in workspace "${ws.name}"`)
+      console.log(`"${cwd}" already in workspace "${workspace.name}"`)
       return
     }
 
@@ -53,6 +52,6 @@ brog add [options]`
       commitHead: await getCommitHead(cwd)
     })
 
-    await workspace.save(ws)
+    await workspace.save()
   }
 }

@@ -7,7 +7,7 @@ const path = require('path')
 const {Command} = require('../command')
 const chalk = require('chalk')
 
-const {workspace} = require('../../src/workspace')
+const {workspaces} = require('../../src/workspace')
 const options = require('../options')
 
 module.exports = class StartCommand extends Command {
@@ -35,7 +35,7 @@ module.exports = class StartCommand extends Command {
   }
 
   async _list (name, cwd) {
-    const ws = workspace.get(name)
+    const ws = workspaces.get(name)
     if (!ws) {
       throw new Error(`workspace "${name}" not found`)
     }
@@ -58,8 +58,8 @@ module.exports = class StartCommand extends Command {
   }
 
   async _listAll () {
-    const names = await workspace.allNames()
-    const current = workspace.currentName()
+    const names = await workspaces.allNames()
+    const current = workspaces.currentName()
 
     if (names.length === 0) {
       console.log(chalk.gray('<no workspaces>'))

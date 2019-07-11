@@ -6,7 +6,7 @@
 const path = require('path')
 const {Command} = require('../command')
 
-const {workspace} = require('../../src/workspace')
+const {workspaces} = require('../../src/workspace')
 
 module.exports = class CreateCommand extends Command {
   get description () {
@@ -32,15 +32,15 @@ module.exports = class CreateCommand extends Command {
       throw new Error('name must be provided')
     }
 
-    const names = await workspace.allNames()
+    const names = await workspaces.allNames()
     if (names.includes(name)) {
       throw new Error(`name "${name}" already exists`)
     }
 
-    await workspace.create(name)
+    await workspaces.create(name)
 
     if (argv.use) {
-      await workspace.setCurrentName(name)
+      await workspaces.setCurrentName(name)
     }
   }
 }

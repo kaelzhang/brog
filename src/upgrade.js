@@ -8,8 +8,10 @@ const {
   hasUncommittedChanges,
   commit
 } = require('./git')
-const {workspace} = require('./workspace')
 
+const ARROW = '→'
+
+// Get all projects that have changes
 const getChanged = async projects => {
   const mapped = await map(projects, async project => {
     const {
@@ -39,6 +41,53 @@ const getChanged = async projects => {
   return mapped.filter(Boolean)
 }
 
+const addDependentsToChanged = async (changed, pc, workspace) => {
+  const {length} = changed
+  let i = 0
+
+  const addPropertyPkg = (change, projectPath) => {
+    const pkg = pc.getByPath(projectPath)
+    change.pkg = pkg
+    return pkg
+  }
+
+  const included = projectPath =>
+    changed.some(change => change.project.path === projectPath)
+
+  const addPkgDependents = pkg => {
+    for (const {dependent} of Object.values(pkg.dependents)) {
+      // eslint-disable-next-line no-use-before-define
+      add(dependent.path)
+    }
+  }
+
+  const add = projectPath => {
+    if (included(projectPath)) {
+      return
+    }
+
+    included[projectPath] = true
+
+    const project = workspace.projectByPath(projectPath)
+    const change = {
+      hasUncommitted: false,
+      autoMessage: true,
+      project
+    }
+
+    changed.push(change)
+
+    const pkg = addPropertyPkg(change, projectPath)
+    addPkgDependents(pkg)
+  }
+
+  for (; i < length; i ++) {
+    const change = changed[i]
+    const pkg = addPropertyPkg(change, change.project.path)
+    addPkgDependents(pkg)
+  }
+}
+
 // a -> b
 // a -> c
 // b -> c
@@ -48,10 +97,10 @@ const getChanged = async projects => {
 // upgrade b -> has dependent a -> upgrade b and a
 
 // upgrade c -> upgrade c, b, a
-const sortChanged = (changed, pc) => changed.sort(
+const sortChanged = changed => changed.sort(
   (a, b) => {
-    const pkga = pc.getByPath(a.project.path)
-    const pkgb = pc.getByPath(b.project.path)
+    const pkga = a.pkg
+    const pkgb = b.pkg
 
     return pkga.hasDependency(pkgb)
       // b comes first
@@ -66,7 +115,7 @@ const sortChanged = (changed, pc) => changed.sort(
 const option = (version, type) => {
   const lower = type.toLowerCase()
   return {
-    name: `${type}: ${version} → ${semver.inc(version, lower)}`,
+    name: `${type}: ${version} ${ARROW} ${semver.inc(version, lower)}`,
     value: lower
   }
 }
@@ -106,11 +155,21 @@ const selectBumpType = async (pkg, hasUncommitted) => {
   return inquirer.prompt(questions)
 }
 
-const bumpVersionAndCommit = async (changed, pc, ws) => {
+const getUpdateMessage = pkg => {
+  const m = []
+  for (const [name, version] of Object.entries(pkg.updates)) {
+    m.push(`${name} ${ARROW} ${version}`)
+  }
+
+  return m.join(', ')
+}
+
+const bumpVersionAndCommit = async (changed, pc, workspace) => {
   const commitMessages = []
 
   await series(changed, async (_, {
     hasUncommitted,
+    autoMessage,
     project
   }) => {
     const pkg = pc.getByPath(project.path)
@@ -125,7 +184,13 @@ const bumpVersionAndCommit = async (changed, pc, ws) => {
     // There might be circular dependencies,
     // so we can not commit the changes just now.
     // Save the commit message
-    commitMessages.push(message)
+    commitMessages.push(
+      hasUncommitted
+        ? message
+        : autoMessage
+          ? `${increased}: ${getUpdateMessage(pkg)}`
+          : increased
+    )
     await pkg.save()
   })
 
@@ -135,12 +200,13 @@ const bumpVersionAndCommit = async (changed, pc, ws) => {
     await commit(project.path, commitMessages[i])
     project.commitHead = await getCommitHead(project.path)
 
-    await workspace.save(ws)
+    await workspace.save()
   })
 }
 
 module.exports = {
   getChanged,
+  addDependentsToChanged,
   sortChanged,
   bumpVersionAndCommit
 }

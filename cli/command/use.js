@@ -3,7 +3,7 @@
 const path = require('path')
 const {Command} = require('../command')
 
-const {workspace} = require('../../src/workspace')
+const {workspaces} = require('../../src/workspace')
 
 module.exports = class StartCommand extends Command {
   get description () {
@@ -18,12 +18,12 @@ module.exports = class StartCommand extends Command {
       throw new Error('workspace must be provided')
     }
 
-    const current = workspace.currentName()
+    const current = workspaces.currentName()
     if (current === name) {
       console.log(`"${name}" is already the current workspace`)
       process.exit(0)
     }
 
-    await workspace.setCurrentName(name)
+    await workspaces.setCurrentName(name)
   }
 }
