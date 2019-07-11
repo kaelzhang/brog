@@ -1,107 +1,63 @@
-// Read and parse all packages
+const path = require('path')
+const fs = require('fs-extra')
 
-const readPackageJson = require('./read-pkg')
+const {error} = require('./error')
 
-class Package {
-  constructor (name) {
-    this.name = name
-    this.dependents = Object.create(null)
-    this.packageJson = null
-    this.rawPackageJson = null
-    this.lastCommitHead = null
-    this.path = null
-  }
+const justRead = async dir => {
+  const packageJson = path.join(dir, 'package.json')
 
-  addDependent (pkg, type) {
-    if (pkg.name in this.dependents) {
-      this.dependents[pkg.name].type.add(type)
-      return
+  try {
+    return await fs.readJson(packageJson)
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      throw error('PKG_NOT_FOUND', dir)
     }
 
-    const dependent = this.dependents[pkg.name] = {
-      dependent: pkg,
-      type: new Set()
-    }
-
-    dependent.type.add(type)
+    throw error('READ_PKG_FAILS', packageJson)
   }
 }
 
-// Parser all packages and calculate dependents
-class PackageCollection {
-  constructor ({
-    projects
-  }) {
-    this.projects = projects
-    this._packages = Object.create(null)
-  }
+// resolve package.bin
+const cleanBin = (cwd, bin) => {
+  for (const [name, p] of Object.entries(bin)) {
+    const binPath = path.join(cwd, p)
 
-  async process () {
-    const tasks = this.projects.map(project => this._processOne(project))
-    await Promise.all(tasks)
-
-    for (const [name, pkg] of Object.entries(this._packages)) {
-      if (!pkg.packageJson) {
-        // Delete packages that is not included by the current workspace
-        delete this._packages[name]
-      }
+    try {
+      bin[name] = require.resolve(binPath)
+    } catch (err) {
+      throw error('ERROR_BIN', name, err.stack)
     }
   }
 
-  get packages () {
-    return this._packages
+  return bin
+}
+
+const read = async dir => {
+  const raw = await justRead(dir)
+  const packageJson = {
+    ...raw
   }
 
-  async _processOne ({
-    path: projectPath,
-    commitHead
-  }) {
-    const {
-      packageJson,
-      rawPackageJson
-    } = await readPackageJson(projectPath)
-
-    const pkg = this._getPackage(packageJson.name)
-
-    pkg.packageJson = packageJson
-    pkg.rawPackageJson = rawPackageJson
-
-    pkg.lastCommitHead = commitHead
-    pkg.path = projectPath
-
-    const {
-      dependencies,
-      devDependencies,
-      peerDependencies
-    } = packageJson
-
-    this._addDependents(pkg, dependencies, 'dependencies')
-    this._addDependents(pkg, devDependencies, 'devDependencies')
-    this._addDependents(pkg, peerDependencies, 'peerDependencies')
+  if (packageJson.bin) {
+    packageJson.bin = cleanBin(dir, {
+      ...packageJson.bin
+    })
   }
 
-  _getPackage (name) {
-    return this._packages[name] || (
-      this._packages[name] = new Package(name)
-    )
+  return {
+    rawPackageJson: raw,
+    packageJson
   }
+}
 
-  _addDependents (dependentpkg, dependencies, type) {
-    if (!dependencies) {
-      return
-    }
-
-    for (const dependencyName of Object.keys(dependencies)) {
-      this._addDependent(dependentpkg, dependencyName, type)
-    }
-  }
-
-  _addDependent (dependentpkg, dependencyName, type) {
-    const dependency = this._getPackage(dependencyName)
-    dependency.addDependent(dependentpkg, type)
-  }
+const write = async (dir, pkg) => {
+  const packageJson = path.join(dir, 'package.json')
+  return fs.outputJson(packageJson, pkg, {
+    spaces: 2
+  })
 }
 
 module.exports = {
-  PackageCollection
+  read,
+  write
 }

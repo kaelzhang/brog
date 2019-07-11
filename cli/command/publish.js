@@ -10,8 +10,12 @@ const log = require('util').debuglog('brog')
 const {Command} = require('../command')
 const options = require('../options')
 
-const {PackageCollection} = require('../../src/pkg')
-const {getChanged} = require('../../src/upgrade')
+const {PackageCollection} = require('../../src/pc')
+const {
+  getChanged,
+  sortChanged,
+  bumpVersionAndCommit
+} = require('../../src/upgrade')
 
 module.exports = class StartCommand extends Command {
   constructor () {
@@ -45,6 +49,8 @@ module.exports = class StartCommand extends Command {
     })
 
     await pc.process()
-    // console.log(pc.packages)
+
+    sortChanged(changed, pc)
+    await bumpVersionAndCommit(changed, pc, workspace)
   }
 }

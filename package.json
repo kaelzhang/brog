@@ -1,6 +1,6 @@
 {
   "name": "brog",
-  "version": "0.0.0-alpha",
+  "version": "1.0.0-alpha.1",
   "description": "A tool for managing multiple related JavaScript projects, the better replacement of lerna",
   "bin": {
     "brog": "bin/cli.js"
@@ -50,15 +50,17 @@
   },
   "dependencies": {
     "bin-tool": "^1.0.2",
-    "chokidar": "^3.0.2",
     "comment-json": "^2.1.0",
     "core-util-is": "^1.0.2",
     "err-object": "^5.1.2",
+    "execa": "^2.0.3",
     "fs-chmod": "^1.0.6",
     "fs-extra": "^8.1.0",
     "globby": "^10.0.1",
     "home": "^2.0.0",
+    "inquirer": "^6.5.0",
     "p-map": "^2.1.0",
-    "read-package-json": "^2.0.13"
+    "promise.extra": "^4.0.0",
+    "semver": "^6.2.0"
   }
 }
