@@ -1,7 +1,7 @@
 // Run npm scripts
 
 const path = require('path')
-const {Command} = require('bin-tool')
+const {Command} = require('../command')
 
 module.exports = class StartCommand extends Command {
   constructor () {

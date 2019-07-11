@@ -1,10 +1,10 @@
 // List all related repos
 
-// npmw ls
-// npmw ls <workspace>
+// brog ls
+// brog ls <workspace>
 
 const path = require('path')
-const {Command} = require('bin-tool')
+const {Command} = require('../command')
 const chalk = require('chalk')
 
 const {workspace} = require('../../src/workspace')

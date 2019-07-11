@@ -30,6 +30,7 @@ class Workspace {
     }
   }
 
+  // Returns `object`
   get (name) {
     const file = this.exists(name)
 
@@ -100,7 +101,7 @@ class Workspace {
       cwd
     })
 
-    return files.map(f => path.basename(f, BROG))
+    return files.map(f => path.basename(f, BROG_WORKSPACE))
   }
 }
 

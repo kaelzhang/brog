@@ -4,17 +4,17 @@ const {workspace} = require('../src/workspace')
 
 exports.workspace = ({
   // Use the project workspace: TODO
+  // use the workspace which the current project belongs to
   useProjectWorkspace,
   // Use the current workspace name
   useCurrent
 } = {}) => ({
-  type: 'string',
   alias: 'w',
   description: 'specify the current used workspace',
   async default () {
-    let [ws] = this.rawParent._
+    let ws
 
-    if (!ws && useCurrent) {
+    if (useCurrent) {
       ws = workspace.currentName()
     }
 
@@ -26,6 +26,10 @@ exports.workspace = ({
   },
 
   set (name) {
+    if (!name) {
+      throw new Error(`workspace is required`)
+    }
+
     const ws = workspace.get(name)
     if (!ws) {
       throw new Error(`workspace "${name}" not found`)

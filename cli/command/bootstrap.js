@@ -2,7 +2,7 @@
 // link dependencies
 
 const path = require('path')
-const {Command} = require('bin-tool')
+const {Command} = require('../command')
 
 const options = require('../options')
 const {PackageCollection} = require('../../src/pkg')
@@ -22,8 +22,8 @@ module.exports = class StartCommand extends Command {
       })
     }
 
-    this.usage = `npmw bootstrap <workspace>
-npmw bootstrap [options]`
+    this.usage = `brog bootstrap <workspace>
+brog bootstrap [options]`
   }
 
   async run ({

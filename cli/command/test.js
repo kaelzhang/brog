@@ -1,7 +1,7 @@
-// npmw run test
+// brog run test
 
 const path = require('path')
-const {Command} = require('bin-tool')
+const {Command} = require('../command')
 
 module.exports = class StartCommand extends Command {
   constructor () {

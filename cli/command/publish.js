@@ -1,10 +1,10 @@
 // Publish the workspace
 
 // 1. Publish
-// npmw publish -- [npm-publish-options]
+// brog publish -- [npm-publish-options]
 
 const path = require('path')
-const {Command} = require('bin-tool')
+const {Command} = require('../command')
 
 const options = require('../options')
 const {PackageCollection} = require('../../src/pkg')

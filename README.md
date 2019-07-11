@@ -27,7 +27,7 @@ brog create foo
 cd /path/to/project-1
 # Add the current directory to workspace foo,
 brog add . foo
-#  or you can use `npmw add /path/to/project-1 foo`
+#  or you can use `brog add /path/to/project-1 foo`
 
 brog add /path/to/project-2 foo
 

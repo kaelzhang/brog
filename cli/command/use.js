@@ -1,7 +1,7 @@
 // Use some workspace
 
 const path = require('path')
-const {Command} = require('bin-tool')
+const {Command} = require('../command')
 
 const {workspace} = require('../../src/workspace')
 

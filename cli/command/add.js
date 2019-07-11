@@ -1,10 +1,10 @@
 // Add a directory into the workspace
 
-// npmw add <path> <workspace> [options]
-// npmw add <path> <workspace> --lerna
+// brog add <path> <workspace> [options]
+// brog add <path> <workspace> --lerna
 
 const path = require('path')
-const {Command} = require('bin-tool')
+const {Command} = require('../command')
 
 const {workspace} = require('../../src/workspace')
 const options = require('../options')
@@ -24,11 +24,11 @@ module.exports = class StartCommand extends Command {
       })
     }
 
-    // npmw add -w foo: add current directory to foo
-    // npmw add: add the current directory to current workspace
-    // npmw add -w foo --cwd /path/to: add /path/to to foo
-    this.usage = `npmw add [workspace] [options]
-npmw add [options]`
+    // brog add -w foo : add current directory to foo
+    // brog add: add the current directory to current workspace
+    // brog add -w foo --cwd /path/to: add /path/to to foo
+    this.usage = `brog add [workspace] [options]
+brog add [options]`
   }
 
   async run ({
@@ -40,7 +40,7 @@ npmw add [options]`
     const index = projects.findIndex(project => project.path === cwd)
 
     if (~ index) {
-      console.log(`"${path}" already in workspace "${ws.name}"`)
+      console.log(`"${cwd}" already in workspace "${ws.name}"`)
       return
     }
 

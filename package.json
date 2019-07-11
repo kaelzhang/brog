@@ -51,6 +51,7 @@
   "dependencies": {
     "bin-tool": "^1.0.2",
     "comment-json": "^2.1.0",
+    "core-util-is": "^1.0.2",
     "err-object": "^5.1.2",
     "fs-chmod": "^1.0.6",
     "fs-extra": "^8.1.0",
