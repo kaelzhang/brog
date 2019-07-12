@@ -17,6 +17,7 @@ const {
   sortChanged,
   bumpVersionAndCommit
 } = require('../../src/upgrade')
+const {publishAndTag} = require('../../src/publish')
 
 module.exports = class StartCommand extends Command {
   constructor () {
@@ -43,8 +44,6 @@ module.exports = class StartCommand extends Command {
       return
     }
 
-    log('changed projects: %j', changed)
-
     const pc = new PackageCollection({
       projects
     })
@@ -54,6 +53,23 @@ module.exports = class StartCommand extends Command {
     addDependentsToChanged(changed, pc, workspace)
     sortChanged(changed, pc)
 
+    const {
+      NODE_DEBUG = ''
+    } = process.env
+
+    if (NODE_DEBUG.split(',').includes('brog')) {
+      log('changed projects: %j', changed.map(change => {
+        const cloned = {
+          ...change
+        }
+
+        delete cloned.pkg
+
+        return cloned
+      }))
+    }
+
     await bumpVersionAndCommit(changed, pc, workspace)
+    await publishAndTag(changed, argv.__)
   }
 }

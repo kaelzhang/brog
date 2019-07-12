@@ -63,6 +63,10 @@ class Package {
     }
   }
 
+  get private () {
+    return this.packageJson.private
+  }
+
   save () {
     return write(this.path, this.rawPackageJson)
   }

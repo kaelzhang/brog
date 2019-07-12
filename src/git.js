@@ -3,11 +3,12 @@ const execa = require('execa')
 const {error} = require('./error')
 
 const REGEX_NOT_GIT = /not a git repository/
-const NO_HEAD = /ambiguous argument 'HEAD'/
+const REGEX_NO_HEAD = /ambiguous argument 'HEAD'/
+const REGEX_TAG_EXISTS = /already exists/
 
-const command = async (cmd, args, cwd) => {
+const command = async (args, cwd) => {
   try {
-    const {stdout} = await execa(cmd, args, {cwd})
+    const {stdout} = await execa('git', args, {cwd})
     return stdout
   } catch (err) {
     const {message} = err
@@ -33,12 +34,12 @@ const command = async (cmd, args, cwd) => {
 
 const getCommitHead = async cwd => {
   try {
-    return command('git', ['rev-parse', 'HEAD'], cwd)
+    return await command(['rev-parse', 'HEAD'], cwd)
   } catch (err) {
     const {message} = err
 
     // Has no head
-    if (NO_HEAD.test(message)) {
+    if (REGEX_NO_HEAD.test(message)) {
       return null
     }
 
@@ -47,7 +48,7 @@ const getCommitHead = async cwd => {
 }
 
 const hasUncommittedChanges = async cwd => {
-  const out = await command('git', ['status', '--short'], cwd)
+  const out = await command(['status', '--short'], cwd)
 
   if (!out) {
     return false
@@ -61,10 +62,23 @@ const hasUncommittedChanges = async cwd => {
   return status.length !== 0
 }
 
-const commit = (cwd, m) => command('git', ['commit', '-a', '-m', m], cwd)
+const commit = (cwd, m) => command(['commit', '-a', '-m', m], cwd)
+
+const tag = async (cwd, t) => {
+  try {
+    return command(['tag', t], cwd)
+  } catch (err) {
+    if (REGEX_TAG_EXISTS.test(err.message)) {
+      throw error('TAG_EXISTS', t)
+    }
+
+    throw err
+  }
+}
 
 module.exports = {
   getCommitHead,
   hasUncommittedChanges,
-  commit
+  commit,
+  tag
 }
