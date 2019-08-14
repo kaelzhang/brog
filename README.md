@@ -9,7 +9,7 @@ A tool for managing multiple related JavaScript projects, the better replacement
 
 ## What can `brog` do?
 
-With the help of `brog`, we need not to put multiple npm packages into a [monorepo](https://en.wikipedia.org/wiki/Monorepo), such as [`babel`](https://github.com/babel/babel).
+With the help of `brog`, we need not to put multiple npm packages into a [monorepo](https://en.wikipedia.org/wiki/Monorepo), such as [`babel`](https://github.com/babel/babel) does.
 
 `brog` could coordinate multiple arbitrary already-existed standalone but related npm packages.
 
@@ -21,18 +21,22 @@ Generally, if you want to do something as lerna does, and you don't want a monor
 # Install brog
 npm i -g brog
 
-# Create a workspace
-brog create foo
+# Create a workspace `foo` and set `foo` as the default workspace
+brog create foo --use
 
 cd /path/to/project-1
-# Add the current directory to workspace foo,
-brog add . foo
-#  or you can use `brog add /path/to/project-1 foo`
+# Add the current directory to the default workspace(`foo`),
+brog add
 
-brog add /path/to/project-2 foo
+# Add a specified directory to a certain workspace
+brog add /path/to/project-2 -w foo
+
+# This will link the dependencies
+brog bootstrap
 
 # Then make changes to project-1 and project-2,
 # inside /path/to/project-2
+
 brog publish
 ```
 

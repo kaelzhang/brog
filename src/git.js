@@ -21,17 +21,7 @@ const command = async (args, cwd) => {
   }
 }
 
-// new Promise((resolve, reject) => {
-//   execa(cmd, {cwd}, (err, stdout, stderr) => {
-//     if (!err) {
-//       return resolve(stdout.trim())
-//     }
-
-//     const message = stderr.trim()
-
-//   })
-// })
-
+// Get the commit head of the current repo
 const getCommitHead = async cwd => {
   try {
     return await command(['rev-parse', 'HEAD'], cwd)
@@ -62,6 +52,7 @@ const hasUncommittedChanges = async cwd => {
   return status.length !== 0
 }
 
+// Commit all changes with commit message `m`
 const commit = (cwd, m) => command(['commit', '-a', '-m', m], cwd)
 
 const tag = async (cwd, t) => {

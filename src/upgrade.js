@@ -41,6 +41,7 @@ const getChanged = async projects => {
   return mapped.filter(Boolean)
 }
 
+// void
 const addDependentsToChanged = async (changed, pc, workspace) => {
   const {length} = changed
   let i = 0
@@ -88,14 +89,15 @@ const addDependentsToChanged = async (changed, pc, workspace) => {
   }
 }
 
+// Sort projects from `changed`.
+// The project that has the deeper dependents comes first
+
 // a -> b
 // a -> c
 // b -> c
 
-// upgrade a -> no dependents -> just upgrade a
-
+// upgrade a -> no dependents -> just upgrade a\
 // upgrade b -> has dependent a -> upgrade b and a
-
 // upgrade c -> upgrade c, b, a
 const sortChanged = changed => changed.sort(
   (a, b) => {
@@ -120,6 +122,7 @@ const option = (version, type) => {
   }
 }
 
+// Inquirer prompt to select the bump type
 const selectBumpType = async (pkg, hasUncommitted) => {
   const {version} = pkg
 
