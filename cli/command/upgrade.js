@@ -13,25 +13,26 @@ const options = require('../options')
 const {PackageCollection} = require('../../src/pc')
 const {
   getChanged,
-  addDependentsToChanged,
-  sortChanged
+  addDependentsToChanged
 } = require('../../src/changes')
-const {
-  commitChanges,
-  pullLatest
-} = require('../../src/sync')
 const {
   bumpVersions,
   commitBumpVersions
 } = require('../../src/upgrade')
-const {
-  publishAndTag,
-  pushProjectTags
-} = require('../../src/publish')
+const {error} = require('../../src/error')
+
+const checkChanges = changed => changed.forEach(({
+  hasUncommitted,
+  project
+}, fail) => {
+  if (hasUncommitted) {
+    fail('HAS_UNCOMMITTED', project.path)
+  }
+})
 
 module.exports = class StartCommand extends Command {
   get description () {
-    return 'bump versions and npm publish'
+    return 'recursively bump versions'
   }
 
   constructor () {
@@ -65,31 +66,9 @@ module.exports = class StartCommand extends Command {
     await pc.process()
 
     addDependentsToChanged(changed, pc, workspace)
-    sortChanged(changed, pc)
-
-    const {
-      NODE_DEBUG = ''
-    } = process.env
-
-    if (NODE_DEBUG.split(',').includes('brog')) {
-      log('changed projects: %j', changed.map(change => {
-        const cloned = {
-          ...change
-        }
-
-        delete cloned.pkg
-
-        return cloned
-      }))
-    }
-
-    await commitChanges(changed)
-    await pullLatest(changed)
+    checkChanges(changed, this.fail)
 
     await bumpVersions(changed, pc)
     await commitBumpVersions(changed, pc, workspace)
-
-    await publishAndTag(changed, argv.__)
-    await pushProjectTags(changed)
   }
 }
