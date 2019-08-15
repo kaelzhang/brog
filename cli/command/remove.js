@@ -9,7 +9,7 @@ const options = require('../options')
 
 module.exports = class StartCommand extends Command {
   get description () {
-    return 'add a project directory into a workspace'
+    return 'remove a project directory from a workspace'
   }
 
   constructor () {
@@ -22,10 +22,10 @@ module.exports = class StartCommand extends Command {
       })
     }
 
-    // brog add -w foo : add current directory to foo
-    // brog add: add the current directory to current workspace
-    // brog add -w foo --cwd /path/to: add /path/to to foo
-    this.usage = `brog add [options]`
+    // brog remove -w foo : add current directory to foo
+    // brog remove: add the current directory to current workspace
+    // brog remove -w foo --cwd /path/to: add /path/to to foo
+    this.usage = `brog remove [options]`
   }
 
   async run ({
@@ -36,12 +36,12 @@ module.exports = class StartCommand extends Command {
 
     const has = workspace.has(cwd)
 
-    if (has) {
-      console.log(`"${cwd}" already in workspace "${workspace.name}"`)
-      return
+    if (!has) {
+      console.error(`"${cwd}" is not in workspace "${workspace.name}"`)
+      process.exit(1)
     }
 
-    await workspace.add(cwd)
+    workspace.remove(cwd)
     await workspace.save()
   }
 }

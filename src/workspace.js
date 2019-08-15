@@ -1,4 +1,4 @@
-const path = require('path')
+const {join, basename} = require('path')
 const fs = require('fs-extra')
 const globby = require('globby')
 const home = require('home')
@@ -10,6 +10,7 @@ const {
 
 const error = require('./error')
 const {exists} = require('./utils')
+const {getCommitHead} = require('./git')
 
 const BROG = '.brog'
 const BROG_WORKSPACE = '.brog-workspace'
@@ -44,6 +45,33 @@ class Workspace {
       }
     }
   }
+
+  index (path) {
+    return this.projects.findIndex(project => project.path === path)
+  }
+
+  has (path) {
+    return this.index(path) !== - 1
+  }
+
+  // Add a new path to the project without checking
+  async add (path) {
+    this.projects.push({
+      path,
+
+      // Adds the current commitHead to the project
+      commitHead: await getCommitHead(path)
+    })
+  }
+
+  remove (path) {
+    const index = this.index(path)
+    if (index === - 1) {
+      return
+    }
+
+    this.projects.splice(index, 1)
+  }
 }
 
 // All workspaces
@@ -73,12 +101,12 @@ class Workspaces {
   }
 
   _getWSFile (name) {
-    return path.join(
+    return join(
       this._root, BROG, name + BROG_WORKSPACE)
   }
 
   _getCurrentNameFile () {
-    return path.join(this._root, BROG, 'CURRENT')
+    return join(this._root, BROG, 'CURRENT')
   }
 
   currentName () {
@@ -119,7 +147,7 @@ class Workspaces {
   }
 
   async allNames () {
-    const cwd = path.join(this._root, BROG)
+    const cwd = join(this._root, BROG)
     if (!exists(cwd)) {
       return []
     }
@@ -128,7 +156,7 @@ class Workspaces {
       cwd
     })
 
-    return files.map(f => path.basename(f, BROG_WORKSPACE))
+    return files.map(f => basename(f, BROG_WORKSPACE))
   }
 }
 

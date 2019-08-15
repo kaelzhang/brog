@@ -8,5 +8,6 @@ module.exports = class MainCommand extends Command {
     this.load(path.join(__dirname, 'command'))
 
     this.alias('ls', 'list')
+    this.alias('rm', 'remove')
   }
 }

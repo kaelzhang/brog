@@ -20,6 +20,10 @@ const {
 const {publishAndTag} = require('../../src/publish')
 
 module.exports = class StartCommand extends Command {
+  get description () {
+    return 'bump versions and npm publish'
+  }
+
   constructor () {
     super()
 

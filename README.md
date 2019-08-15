@@ -29,7 +29,7 @@ cd /path/to/project-1
 brog add
 
 # Add a specified directory to a certain workspace
-brog add /path/to/project-2 -w foo
+brog add --cwd /path/to/project-2 -w foo
 
 # This will link the dependencies
 brog bootstrap
