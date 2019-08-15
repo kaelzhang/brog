@@ -3,7 +3,10 @@ const {series} = require('promise.extra')
 const {
   publish
 } = require('./npm')
-const {tag} = require('./git')
+const {
+  tag,
+  pushTags
+} = require('./git')
 
 const publishAndTagOne = async (extraArgs, pkg, cwd) => {
   const {version} = pkg
@@ -28,6 +31,22 @@ const publishAndTag = async (changed, extraArgs) => {
   })
 }
 
+const pushProjectTags = async changed => {
+  await series(changed, async (_, {
+    project: {
+      path
+    },
+    pkg
+  }) => {
+    if (pkg.private) {
+      return
+    }
+
+    await pushTags(path)
+  })
+}
+
 module.exports = {
-  publishAndTag
+  publishAndTag,
+  pushProjectTags
 }

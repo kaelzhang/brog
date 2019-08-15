@@ -71,5 +71,6 @@ module.exports = class StartCommand extends Command {
 
     await bumpVersionAndCommit(changed, pc, workspace)
     await publishAndTag(changed, argv.__)
+    await pushTags(changed)
   }
 }

@@ -67,9 +67,12 @@ const tag = async (cwd, t) => {
   }
 }
 
+const pushTags = async cwd => command(['push', '--tags'], cwd)
+
 module.exports = {
   getCommitHead,
   hasUncommittedChanges,
   commit,
-  tag
+  tag,
+  pushTags
 }

@@ -158,6 +158,7 @@ const selectBumpType = async (pkg, hasUncommitted) => {
   return inquirer.prompt(questions)
 }
 
+// `{dep} -> {new_version}`
 const getUpdateMessage = pkg => {
   const m = []
   for (const [name, version] of Object.entries(pkg.updates)) {
@@ -191,6 +192,7 @@ const bumpVersionAndCommit = async (changed, pc, workspace) => {
       hasUncommitted
         ? message
         : autoMessage
+          // 1.1.0: eslint -> 6.1.0
           ? `${increased}: ${getUpdateMessage(pkg)}`
           : increased
     )
