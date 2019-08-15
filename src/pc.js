@@ -17,6 +17,8 @@ class Package {
     this.rawPackageJson = null
     this.lastCommitHead = null
     this.path = null
+
+    // Updated dependencies
     this.updates = Object.create(null)
   }
 

@@ -9,6 +9,9 @@ const exists = filepath => {
   }
 }
 
+const all = (tasks, runner) => Promise.all(tasks.map(runner))
+
 module.exports = {
-  exists
+  exists,
+  all
 }
