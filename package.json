@@ -1,6 +1,6 @@
 {
   "name": "brog",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "A tool for managing multiple related JavaScript projects, the better replacement of lerna",
   "bin": {
     "brog": "bin/cli.js"
