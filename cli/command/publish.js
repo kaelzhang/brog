@@ -17,7 +17,10 @@ const {
   sortChanged,
   bumpVersionAndCommit
 } = require('../../src/upgrade')
-const {publishAndTag} = require('../../src/publish')
+const {
+  publishAndTag,
+  pushProjectTags
+} = require('../../src/publish')
 
 module.exports = class StartCommand extends Command {
   get description () {
@@ -75,6 +78,6 @@ module.exports = class StartCommand extends Command {
 
     await bumpVersionAndCommit(changed, pc, workspace)
     await publishAndTag(changed, argv.__)
-    await pushTags(changed)
+    await pushProjectTags(changed)
   }
 }

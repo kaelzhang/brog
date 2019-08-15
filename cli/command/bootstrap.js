@@ -5,7 +5,7 @@ const path = require('path')
 const {Command} = require('../command')
 
 const options = require('../options')
-const {PackageCollection} = require('../../src/pkg')
+const {PackageCollection} = require('../../src/pc')
 const link = require('../../src/link')
 
 module.exports = class StartCommand extends Command {
@@ -19,8 +19,7 @@ module.exports = class StartCommand extends Command {
     this.options = {
       cwd: options.cwd,
       workspace: options.workspace({
-        useProjectWorkspace: true,
-        useArgvRest: 0
+        useProjectWorkspace: true
       })
     }
 
@@ -38,7 +37,6 @@ brog bootstrap [options]`
     })
 
     await pc.process()
-
     await link(pc)
   }
 }

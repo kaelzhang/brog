@@ -24,6 +24,11 @@ class Workspace {
     this.config = config
   }
 
+  // For debug log
+  toJSON () {
+    return this.name
+  }
+
   get name () {
     return this.config.name
   }
@@ -78,6 +83,7 @@ class Workspace {
 class Workspaces {
   constructor (root) {
     this._root = root
+    this.get = this.get.bind(this)
   }
 
   exists (name) {
@@ -88,6 +94,7 @@ class Workspaces {
     }
   }
 
+  // Get workspace by name
   // Returns `object`
   get (name) {
     const file = this.exists(name)
@@ -98,6 +105,16 @@ class Workspaces {
 
     const content = fs.readFileSync(file)
     return new Workspace(file, parse(content.toString()))
+  }
+
+  // Get all namespaces by query
+  async all ({path}) {
+    const names = await this.allNames()
+    const workspaces = await Promise.all(
+      names.map(this.get)
+    )
+
+    return workspaces.filter(ws => ws.has(path))
   }
 
   _getWSFile (name) {
