@@ -3,6 +3,7 @@ const {isNumber} = require('core-util-is')
 const inquirer = require('inquirer')
 
 const {workspaces} = require('../src/workspace')
+const {error} = require('../src/error')
 
 const selectWorkspace = async (message, names) => {
   const questions = [{
@@ -100,4 +101,17 @@ exports.cwd = {
   description: 'set the current working directory',
   default: process.cwd(),
   set: resolve
+}
+
+exports.name = {
+  type: 'string',
+  description: 'workspace name',
+  default () {
+    const [name] = this.rawParent._
+    if (!name) {
+      throw error('NAME_REQUIRED')
+    }
+
+    return name
+  }
 }

@@ -7,6 +7,7 @@ const path = require('path')
 const {Command} = require('../command')
 
 const {workspaces} = require('../../src/workspace')
+const options = require('../options')
 
 module.exports = class CreateCommand extends Command {
   get description () {
@@ -17,6 +18,7 @@ module.exports = class CreateCommand extends Command {
     super()
 
     this.options = {
+      name: options.name,
       use: {
         type: 'boolean',
         description: 'create and use the workspace created just now'
@@ -25,13 +27,11 @@ module.exports = class CreateCommand extends Command {
   }
 
   async run ({
-    argv
-  }) {
-    const [name] = argv._
-    if (!name) {
-      throw new Error('name must be provided')
+    argv: {
+      name,
+      use
     }
-
+  }) {
     const names = await workspaces.allNames()
     if (names.includes(name)) {
       throw new Error(`name "${name}" already exists`)
@@ -39,7 +39,7 @@ module.exports = class CreateCommand extends Command {
 
     await workspaces.create(name)
 
-    if (argv.use) {
+    if (use) {
       await workspaces.setCurrentName(name)
     }
   }

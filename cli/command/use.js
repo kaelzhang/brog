@@ -4,20 +4,24 @@ const path = require('path')
 const {Command} = require('../command')
 
 const {workspaces} = require('../../src/workspace')
+const options = require('../options')
 
 module.exports = class StartCommand extends Command {
   get description () {
     return 'set the current workspace'
   }
 
-  async run ({
-    argv
-  }) {
-    const [name] = argv._
-    if (!name) {
-      throw new Error('workspace must be provided')
-    }
+  constructor () {
+    super()
 
+    this.options = {
+      name: options.name
+    }
+  }
+
+  async run ({
+    argv: {name}
+  }) {
     const current = workspaces.currentName()
 
     if (current === name) {

@@ -23,6 +23,8 @@ E('NOT_IN_WORKSPACE', '"%s" is not in workspace "%s"')
 
 E('WORKSPACE_NOT_FOUND', 'workspace "%s" not found')
 
+E('NAME_REQUIRED', 'workspace name is required')
+
 module.exports = {
   error
 }
