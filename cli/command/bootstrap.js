@@ -20,7 +20,11 @@ module.exports = class StartCommand extends Command {
       cwd: options.cwd,
       workspace: options.workspace({
         useProjectWorkspace: true
-      })
+      }),
+      'handle-peer': {
+        type: 'boolean',
+        default: true
+      }
     }
 
     // brog bootstrap foo

@@ -37,7 +37,7 @@ module.exports = class StartCommand extends Command {
   async _list (name, cwd) {
     const ws = workspaces.get(name)
     if (!ws) {
-      throw new Error(`workspace "${name}" not found`)
+      this.fail('WORKSPACE_NOT_FOUND', name)
     }
 
     const {projects} = ws

@@ -19,8 +19,10 @@ module.exports = class StartCommand extends Command {
     }
 
     const current = workspaces.currentName()
+
     if (current === name) {
-      console.log(`"${name}" is already the current workspace`)
+      // This is not harmful, so do not throw
+      console.warn(`"${name}" is already the current workspace`)
       process.exit(0)
     }
 

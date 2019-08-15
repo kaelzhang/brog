@@ -37,8 +37,7 @@ module.exports = class StartCommand extends Command {
     const has = workspace.has(cwd)
 
     if (!has) {
-      console.error(`"${cwd}" is not in workspace "${workspace.name}"`)
-      process.exit(1)
+      this.fail('NOT_IN_WORKSPACE', cwd, workspace.name)
     }
 
     workspace.remove(cwd)
