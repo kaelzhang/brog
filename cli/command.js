@@ -1,7 +1,7 @@
 const {Command} = require('bin-tool')
 const log = require('util').debuglog('brog')
 
-const {error} = require('../../src/error')
+const {error} = require('../src/error')
 
 const fail = (...args) => {
   throw error(...args)

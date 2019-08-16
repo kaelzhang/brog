@@ -2,7 +2,7 @@ const {Errors} = require('err-object')
 const {join} = require('path')
 
 const {E, error} = new Errors({
-  messagePrefix: '[npm-workspace] ',
+  messagePrefix: '[brog] ',
   filterStackSources: [
     __filename,
     join(__dirname, '..', 'cli', 'command.js')
@@ -31,6 +31,11 @@ E('DEPENDENCY_NOT_INSTALLED',
 E('PEER_CONFLICT', `peer dependency "%s" version conflicts:
 - "%s" requires "%s", installed "%s"
 - "%s" requires "%s"`)
+
+E('PEER_ALONE', `peer dependency "%s" installed by the following projects:
+%s,
+
+but no projects in the current workspace depends on it as a normal dependency or dev dependency`)
 
 module.exports = {
   error

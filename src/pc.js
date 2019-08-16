@@ -6,6 +6,7 @@ const {
 const {error} = require('./error')
 const {
   DEPENDENCIES,
+  DEV_DEPENDENCIES,
   PEER_DEPENDENCIES
 } = require('./constants')
 
@@ -203,7 +204,7 @@ class PackageCollection {
     } = packageJson
 
     this._addDependents(pkg, dependencies, DEPENDENCIES)
-    this._addDependents(pkg, devDependencies, 'devDependencies')
+    this._addDependents(pkg, devDependencies, DEV_DEPENDENCIES)
     this._addDependents(pkg, peerDependencies, PEER_DEPENDENCIES)
   }
 

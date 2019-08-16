@@ -6,6 +6,7 @@ const {satisfies} = require('semver')
 const {error} = require('./error')
 const {
   DEPENDENCIES,
+  DEV_DEPENDENCIES,
   PEER_DEPENDENCIES
 } = require('./constants')
 
@@ -57,11 +58,23 @@ const getFirstWSDependent = pkg => {
   for (const {
     dependent,
     type
-  } of pkg.dependents) {
-    if (type.has(PEER_DEPENDENCIES)) {
+  } of Object.values(pkg.dependents)) {
+    // Peer dependencies will not be installed,
+    // there must be a repo has the pkg as a normal or dev dependency
+    // Otherwise, it is a mistake
+    if (type.has(DEPENDENCIES) || type.has(DEV_DEPENDENCIES)) {
       return dependent
     }
   }
+
+  const list = []
+  for (const {dependent} of Object.values(pkg.dependents)) {
+    list.push(dependent.path)
+  }
+
+  throw error('PEER_ALONE',
+    pkg.name,
+    list.map(p => `- "${p}"`).join('\n'))
 }
 
 const getDepRange = (name, dependent) => {
@@ -99,6 +112,7 @@ const linkPeer = async (pkg, packageJson, dependent, rootDependent) => {
 const checkAndLinkPeer = async pkg => {
   // Just get the first dependent that is in the current workspace,
   const rootDependent = getFirstWSDependent(pkg)
+
   const {path} = rootDependent
   const packagePath = join(
     path, 'node_modules', pkg.name, 'package.json')
@@ -118,8 +132,12 @@ const checkAndLinkPeer = async pkg => {
   for (const {
     dependent,
     type
-  } of pkg.dependents) {
-    if (type.has(PEER_DEPENDENCIES) || type.has(DEPENDENCIES)) {
+  } of Object.values(pkg.dependents)) {
+    if (
+      // Do not link peer dependencies to itself
+      rootDependent !== dependent
+      && (type.has(PEER_DEPENDENCIES) || type.has(DEPENDENCIES))
+    ) {
       tasks.push(linkPeer(pkg, packageJson, dependent, rootDependent))
     }
   }

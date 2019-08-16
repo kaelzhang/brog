@@ -46,7 +46,7 @@ brog bootstrap [options]`
       projects: argv.workspace.projects
     })
 
-    const handlePeers = arvs[HANDLE_PEER]
+    const handlePeers = argv[HANDLE_PEER]
 
     await pc.process(handlePeers)
     await link(pc)
