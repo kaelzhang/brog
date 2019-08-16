@@ -25,6 +25,13 @@ E('WORKSPACE_NOT_FOUND', 'workspace "%s" not found')
 
 E('NAME_REQUIRED', 'workspace name is required')
 
+E('DEPENDENCY_NOT_INSTALLED',
+  '"%s" is not install in "%s", make sure you have `npm install` or `yarn` executed first')
+
+E('PEER_CONFLICT', `peer dependency "%s" version conflicts:
+- "%s" requires "%s", installed "%s"
+- "%s" requires "%s"`)
+
 module.exports = {
   error
 }

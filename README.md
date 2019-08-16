@@ -15,6 +15,10 @@ With the help of `brog`, we need not to put multiple npm packages into a [monore
 
 Generally, if you want to do something as lerna does, and you don't want a monorepo, or can't put everything inside a monorepo (because the npm packages already exist), `brog` will be a good choice.
 
+Besides, `brog` could
+
+- **handles peer dependencies**
+
 ## Usage
 
 ```sh

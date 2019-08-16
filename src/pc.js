@@ -4,10 +4,21 @@ const {
   write
 } = require('./pkg')
 const {error} = require('./error')
+const {
+  DEPENDENCIES,
+  PEER_DEPENDENCIES
+} = require('./constants')
 
 const CARET = '^'
 const TILDE = '~'
 const REGEX_IS_NUMBER = /^\d/
+
+class Dependent {
+  constructor (pkg) {
+    this.dependent = pkg
+    this.type = new Set()
+  }
+}
 
 class Package {
   constructor (name) {
@@ -20,18 +31,32 @@ class Package {
 
     // Updated dependencies
     this.updates = Object.create(null)
+    this._isPeer = false
+  }
+
+  // Whether the package is a peer dependency of any other packages
+  isPeerDependency () {
+    return this._isPeer
+  }
+
+  // Wheter the package is in the current workspace
+  isInWorkspace () {
+    // Only the the packages inside the current workspace
+    // will have this property assigned
+    return !!this.packageJson
   }
 
   addDependent (pkg, type) {
+    if (type === PEER_DEPENDENCIES) {
+      this._isPeer = true
+    }
+
     if (pkg.name in this.dependents) {
       this.dependents[pkg.name].type.add(type)
       return
     }
 
-    const dependent = this.dependents[pkg.name] = {
-      dependent: pkg,
-      type: new Set()
-    }
+    const dependent = this.dependents[pkg.name] = new Dependent(pkg)
 
     dependent.type.add(type)
   }
@@ -52,6 +77,8 @@ class Package {
     return this.packageJson.version
   }
 
+  // Update the version of the current package
+  // and update the dep version of its dependents
   set version (version) {
     this.packageJson.version = version
     this.rawPackageJson.version = version
@@ -107,14 +134,28 @@ class PackageCollection {
   }) {
     this.projects = projects
     this._packages = Object.create(null)
+    this._peers = new Set()
   }
 
-  async process () {
+  _processPeers () {
+    for (const pkg of Object.values(this._packages)) {
+      if (pkg.isPeerDependency()) {
+        this._peers.add(pkg)
+      }
+    }
+  }
+
+  async process (handlePeers) {
     const tasks = this.projects.map(project => this._processOne(project))
     await Promise.all(tasks)
 
+    if (handlePeers) {
+      this._processPeers()
+    }
+
+    // Clean
     for (const [name, pkg] of Object.entries(this._packages)) {
-      if (!pkg.packageJson) {
+      if (!pkg.isInWorkspace()) {
         // Delete packages that is not included by the current workspace
         delete this._packages[name]
       }
@@ -132,6 +173,10 @@ class PackageCollection {
 
   get packages () {
     return this._packages
+  }
+
+  get peers () {
+    return this._peers
   }
 
   async _processOne ({
@@ -157,9 +202,9 @@ class PackageCollection {
       peerDependencies
     } = packageJson
 
-    this._addDependents(pkg, dependencies, 'dependencies')
+    this._addDependents(pkg, dependencies, DEPENDENCIES)
     this._addDependents(pkg, devDependencies, 'devDependencies')
-    this._addDependents(pkg, peerDependencies, 'peerDependencies')
+    this._addDependents(pkg, peerDependencies, PEER_DEPENDENCIES)
   }
 
   _getPackage (name) {

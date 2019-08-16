@@ -6,7 +6,12 @@ const {Command} = require('../command')
 
 const options = require('../options')
 const {PackageCollection} = require('../../src/pc')
-const link = require('../../src/link')
+const {
+  link,
+  linkPeers
+} = require('../../src/link')
+
+const HANDLE_PEER = 'handle-peer'
 
 module.exports = class StartCommand extends Command {
   get description () {
@@ -21,8 +26,9 @@ module.exports = class StartCommand extends Command {
       workspace: options.workspace({
         useProjectWorkspace: true
       }),
-      'handle-peer': {
+      [HANDLE_PEER]: {
         type: 'boolean',
+        description: 'whether should handle peerDepedendencies or not',
         default: true
       }
     }
@@ -40,7 +46,13 @@ brog bootstrap [options]`
       projects: argv.workspace.projects
     })
 
-    await pc.process()
+    const handlePeers = arvs[HANDLE_PEER]
+
+    await pc.process(handlePeers)
     await link(pc)
+
+    if (handlePeers) {
+      await linkPeers(pc)
+    }
   }
 }

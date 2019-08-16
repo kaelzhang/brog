@@ -63,6 +63,6 @@
     "inquirer": "^6.5.0",
     "p-map": "^2.1.0",
     "promise.extra": "^4.0.0",
-    "semver": "^6.2.0"
+    "semver": "^6.3.0"
   }
 }
