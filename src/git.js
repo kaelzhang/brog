@@ -72,6 +72,7 @@ const pull = cwd => command(['pull', '--rebase'], cwd)
 const pushTags = cwd => command(['push', '--tags'], cwd)
 
 module.exports = {
+  command,
   getCommitHead,
   hasUncommittedChanges,
   commit,

@@ -48,7 +48,8 @@
     "codecov": "^3.5.0",
     "eslint": "^6.1.0",
     "eslint-plugin-import": "^2.18.2",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "test-fixture": "^2.4.1"
   },
   "dependencies": {
     "bin-tool": "^1.4.0",

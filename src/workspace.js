@@ -18,6 +18,13 @@ const EMPTY_WORKSPACE = parse(`{
   "projects": []
 }`)
 
+class Project {
+  constructor (path, commitHead) {
+    this.path = path
+    this.commitHead = commitHead
+  }
+}
+
 class Workspace {
   constructor (filepath, config) {
     this.path = filepath
@@ -61,12 +68,13 @@ class Workspace {
 
   // Add a new path to the project without checking
   async add (path) {
-    this.projects.push({
-      path,
-
-      // Adds the current commitHead to the project
-      commitHead: await getCommitHead(path)
-    })
+    this.projects.push(
+      new Project(
+        path,
+        // Adds the current commitHead to the project
+        await getCommitHead(path)
+      )
+    )
   }
 
   remove (path) {
@@ -179,5 +187,6 @@ class Workspaces {
 
 module.exports = {
   Workspaces,
-  workspaces: new Workspaces(home())
+  workspaces: new Workspaces(home()),
+  Project
 }
