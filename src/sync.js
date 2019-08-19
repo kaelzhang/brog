@@ -44,7 +44,7 @@ const commitChanges = async changed =>
       return
     }
 
-    const message = askCommitMessage(change)
+    const message = await askCommitMessage(change)
     await commit(project.path, message)
   })
 
