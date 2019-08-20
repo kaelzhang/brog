@@ -77,7 +77,7 @@ const commitBumpVersions = async (changed, pc, workspace) => {
 
     const message = isDependent
       // If has dependencies, then include upgrade info
-      ? getUpdateMessage(pkg)
+      ? `${pkg.version}: ${getUpdateMessage(pkg)}`
       // otherwise, use the bumped version
       : pkg.version
 
