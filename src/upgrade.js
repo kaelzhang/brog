@@ -70,11 +70,18 @@ const bumpVersions = async (changed, pc) =>
 const commitBumpVersions = async (changed, pc, workspace) => {
   await all(changed, async ({
     project,
-    pkg
+    pkg,
+    isDependent
   }) => {
     const {path} = project
 
-    await commit(path, getUpdateMessage(pkg))
+    const message = isDependent
+      // If has dependencies, then include upgrade info
+      ? getUpdateMessage(pkg)
+      // otherwise, use the bumped version
+      : pkg.version
+
+    await commit(path, message)
     project.commitHead = await getCommitHead(path)
   })
 

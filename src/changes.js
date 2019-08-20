@@ -61,8 +61,8 @@ const addDependentsToChanged = async (changed, pc, workspace) => {
     return pkg
   }
 
-  const included = projectPath =>
-    changed.some(change => change.project.path === projectPath)
+  const find = projectPath =>
+    changed.find(({project}) => projectPath === project.path)
 
   const addPkgDependents = pkg => {
     for (const {dependent} of Object.values(pkg.dependents)) {
@@ -72,11 +72,12 @@ const addDependentsToChanged = async (changed, pc, workspace) => {
   }
 
   const add = projectPath => {
-    if (included(projectPath)) {
+    const found = find(projectPath)
+
+    if (found) {
+      found.isDependent = true
       return
     }
-
-    included[projectPath] = true
 
     const project = workspace.projectByPath(projectPath)
     const change = new Changed({
