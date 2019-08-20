@@ -6,7 +6,7 @@ const REGEX_NOT_GIT = /not a git repository/
 const REGEX_NO_HEAD = /ambiguous argument 'HEAD'/
 const REGEX_TAG_EXISTS = /already exists/
 
-const command = async (args, cwd) => {
+const git = async (args, cwd) => {
   try {
     const {stdout} = await execa('git', args, {cwd})
     return stdout
@@ -24,7 +24,7 @@ const command = async (args, cwd) => {
 // Get the commit head of the current repo
 const getCommitHead = async cwd => {
   try {
-    return await command(['rev-parse', 'HEAD'], cwd)
+    return await git(['rev-parse', 'HEAD'], cwd)
   } catch (err) {
     const {message} = err
 
@@ -38,7 +38,7 @@ const getCommitHead = async cwd => {
 }
 
 const hasUncommittedChanges = async cwd => {
-  const out = await command(['status', '--short'], cwd)
+  const out = await git(['status', '--short'], cwd)
 
   if (!out) {
     return false
@@ -53,14 +53,14 @@ const hasUncommittedChanges = async cwd => {
 }
 
 // Commit all changes with commit message `m`
-const commit = (cwd, m) => command(
+const commit = (cwd, m) => git(
   ['commit', '-a', '-m', m],
   cwd
 )
 
 const tag = async (cwd, t) => {
   try {
-    return command(['tag', t], cwd)
+    return git(['tag', t], cwd)
   } catch (err) {
     if (REGEX_TAG_EXISTS.test(err.message)) {
       throw error('TAG_EXISTS', t)
@@ -70,12 +70,12 @@ const tag = async (cwd, t) => {
   }
 }
 
-const pull = cwd => command(['pull', '--rebase'], cwd)
+const pull = cwd => git(['pull', '--rebase'], cwd)
 
-const pushTags = cwd => command(['push', '--tags'], cwd)
+const pushTags = cwd => git(['push', '--tags'], cwd)
 
 module.exports = {
-  command,
+  git,
   getCommitHead,
   hasUncommittedChanges,
   commit,

@@ -2,7 +2,7 @@ const fixtures = require('test-fixture')
 
 const {Project} = require('../src/workspace')
 const {
-  command,
+  git,
   getCommitHead
 } = require('../src/git')
 
@@ -10,9 +10,9 @@ const {
 // use `resolve` of the instance as the argument
 const createGitProject = async (name, resolve) => {
   const cwd = resolve(name)
-  await command(['init'], cwd)
-  await command(['add', '-A'], cwd)
-  await command(['commit', '-m', `"first commit"`], cwd)
+  await git(['init'], cwd)
+  await git(['add', '-A'], cwd)
+  await git(['commit', '-m', `"first commit"`], cwd)
   return cwd
 }
 
