@@ -1,6 +1,5 @@
 const test = require('ava')
 // const log = require('util').debuglog('brog')
-const {join} = require('path')
 
 const {PackageCollection} = require('../src/pc')
 const {

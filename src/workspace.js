@@ -116,6 +116,7 @@ class Workspaces {
   }
 
   // Get all namespaces by query
+  // For now, get all namespaces each of which has `path`
   async all ({path}) {
     const names = await this.allNames()
     const workspaces = await Promise.all(
@@ -167,7 +168,6 @@ class Workspaces {
     }, EMPTY_WORKSPACE)
 
     const workspace = new Workspace(this._getWSFile(name), config)
-
     return workspace.save()
   }
 
