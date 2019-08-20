@@ -148,6 +148,7 @@ class Workspaces {
         return
       }
 
+      // istanbul ignore next
       throw error('READ_CURRENT_FAILED', err.stack)
     }
 
