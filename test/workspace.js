@@ -6,11 +6,18 @@ const {
   getCommitHead
 } = require('../src/git')
 
-const createProject = async (name, resolve) => {
+// Create a `test-fixture` instance,
+// use `resolve` of the instance as the argument
+const createGitProject = async (name, resolve) => {
   const cwd = resolve(name)
   await command(['init'], cwd)
   await command(['add', '-A'], cwd)
   await command(['commit', '-m', `"first commit"`], cwd)
+  return cwd
+}
+
+const createProject = async (name, resolve) => {
+  const cwd = await createGitProject(name, resolve)
   return new Project(cwd, await getCommitHead(cwd))
 }
 
@@ -28,5 +35,6 @@ const createProjects = async (names, ...to) => {
 }
 
 module.exports = {
+  createGitProject,
   createProjects
 }
