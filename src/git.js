@@ -1,4 +1,5 @@
 const execa = require('execa')
+const stringify = require('code-stringify')
 
 const {error} = require('./error')
 
@@ -53,7 +54,10 @@ const hasUncommittedChanges = async cwd => {
 }
 
 // Commit all changes with commit message `m`
-const commit = (cwd, m) => command(['commit', '-a', '-m', m], cwd)
+const commit = (cwd, m) => command(
+  ['commit', '-a', '-m', stringify(m)],
+  cwd
+)
 
 const tag = async (cwd, t) => {
   try {
