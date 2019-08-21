@@ -34,7 +34,7 @@
   "ava": {
     "babel": false,
     "files": [
-      "test/*.test.js"
+      "test/link.test.js"
     ]
   },
   "author": "kaelzhang",

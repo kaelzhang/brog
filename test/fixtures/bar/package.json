@@ -2,6 +2,7 @@
   "name": "bar",
   "version": "1.0.0",
   "peerDependencies": {
-    "baz": "^1.0.0"
+    "baz": "^1.0.0",
+    "ignore": "^5.0.0"
   }
 }

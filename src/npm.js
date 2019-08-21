@@ -3,9 +3,9 @@ const {error} = require('./error')
 
 const SPACE = ' '
 
-const npm = (args, cwd) => {
+const npm = async (args, cwd) => {
   try {
-    const {stdout} = execa('npm', args, {cwd})
+    const {stdout} = await execa('npm', args, {cwd})
     return stdout
   } catch (err) {
     throw error(

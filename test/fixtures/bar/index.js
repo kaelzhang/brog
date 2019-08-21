@@ -1,1 +1,4 @@
-module.exports = require('baz')
+module.exports = {
+  baz: require('baz'),
+  ignore: require('ignore')
+}

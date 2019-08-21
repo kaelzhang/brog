@@ -6,22 +6,47 @@ const {
   createProjects
 } = require('./workspace')
 const {
-  link
+  link,
+  linkPeers
 } = require('../src/link')
 
-test('bootstrap', async t => {
-  const {
-    projects,
-    resolve
-  } = await createProjects(['foo', 'bar', 'baz'])
+const run = (title, runLink, callback) => {
+  test(title, async t => {
+    const {
+      projects,
+      resolve
+    } = await createProjects(['foo', 'bar', 'baz'])
 
-  const pc = new PackageCollection({
-    projects
+    const pc = new PackageCollection({
+      projects
+    })
+
+    await pc.process(true)
+    await runLink(pc)
+
+    const foo = require(resolve('foo'))
+
+    callback(t, foo)
   })
+}
 
-  await pc.process()
-  await link(pc)
+run(
+  'bootstrap',
+  pc => link(pc),
+  (t, foo) => {
+    t.is(foo.bazEqual(), true)
+    t.is(foo.ignoreEqual(), false)
+  }
+)
 
-  const {equal} = require(resolve('foo'))
-  t.is(equal(), true)
-})
+run(
+  'bootstrap with peers',
+  async pc => {
+    await link(pc)
+    await linkPeers(pc)
+  },
+  (t, foo) => {
+    t.is(foo.bazEqual(), true)
+    t.is(foo.ignoreEqual(), true)
+  }
+)
