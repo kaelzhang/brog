@@ -187,6 +187,7 @@ class Workspaces {
 }
 
 module.exports = {
+  Workspace,
   Workspaces,
   workspaces: new Workspaces(home()),
   Project
