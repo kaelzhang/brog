@@ -28,6 +28,7 @@ const {
   publishAndTag,
   pushProjectTags
 } = require('../../src/publish')
+const {DOUBLE_SLASH} = require('../../src/constants')
 
 module.exports = class StartCommand extends Command {
   get description () {
@@ -89,7 +90,7 @@ module.exports = class StartCommand extends Command {
     await bumpVersions(changed, pc)
     await commitBumpVersions(changed, pc, workspace)
 
-    await publishAndTag(changed, argv.__)
+    await publishAndTag(changed, argv[DOUBLE_SLASH])
     await pushProjectTags(changed)
   }
 }
