@@ -5,7 +5,8 @@ const {
 } = require('./npm')
 const {
   tag,
-  pushTags
+  pushTags,
+  push
 } = require('./git')
 
 const publishAndTagOne = async (extraArgs, pkg, cwd) => {
@@ -20,6 +21,8 @@ const publishAndTagOne = async (extraArgs, pkg, cwd) => {
   await tag(cwd, version)
   // eslint-disable-next-line no-console
   console.log(`${pkg.name}: git tag ${pkg.version}`)
+
+  await push(cwd)
 }
 
 const publishAndTag = async (changed, extraArgs) => {

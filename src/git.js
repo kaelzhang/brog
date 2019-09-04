@@ -86,6 +86,11 @@ const pull = async cwd => {
 
 const pushTags = cwd => git(['push', '--tags'], cwd)
 
+const push = async cwd => {
+  const branch = await currentBranch(cwd)
+  await git(['push', 'origin', branch], cwd)
+}
+
 module.exports = {
   git,
   getCommitHead,
@@ -93,5 +98,6 @@ module.exports = {
   commit,
   tag,
   pushTags,
-  pull
+  pull,
+  push
 }
