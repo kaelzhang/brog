@@ -1,6 +1,7 @@
 const execa = require('execa')
 
 const {error} = require('./error')
+const {SPACE} = require('./constants')
 
 const REGEX_NOT_GIT = /not a git repository/
 const REGEX_NO_HEAD = /ambiguous argument 'HEAD'/
@@ -17,7 +18,13 @@ const git = async (args, cwd) => {
       throw error('NOT_GIT_REPO', cwd)
     }
 
-    throw err
+    throw error(
+      'ERR_NPM_COMMAND',
+      `npm ${args.join(SPACE)}`,
+      cwd,
+      err.message,
+      err.stderr
+    )
   }
 }
 
@@ -70,7 +77,12 @@ const tag = async (cwd, t) => {
   }
 }
 
-const pull = cwd => git(['pull', '--rebase'], cwd)
+const currentBranch = cwd => git(['symbolic-ref', '--short', 'HEAD'], cwd)
+
+const pull = async cwd => {
+  const branch = await currentBranch(cwd)
+  await git(['pull', '--rebase', 'origin', branch], cwd)
+}
 
 const pushTags = cwd => git(['push', '--tags'], cwd)
 

@@ -37,7 +37,11 @@ E('PEER_ALONE', `peer dependency "%s" installed by the following projects:
 
 but no projects in the current workspace depends on it as a normal dependency or dev dependency`)
 
-E('ERR_NPM_COMMAND', 'command "%s" fails at path "%s", reason: %s')
+E('ERR_GIT_COMMAND',
+  'git command "%s" fails at path "%s", reason\n\n: %s\n\n%s')
+
+E('ERR_NPM_COMMAND',
+  'npm command "%s" fails at path "%s", reason\n\n: %s\n\n%s')
 
 module.exports = {
   error

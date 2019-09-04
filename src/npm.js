@@ -1,7 +1,7 @@
 const execa = require('execa')
 const {error} = require('./error')
 
-const SPACE = ' '
+const {SPACE} = require('./constants')
 
 const npm = async (args, cwd) => {
   try {
@@ -12,7 +12,8 @@ const npm = async (args, cwd) => {
       'ERR_NPM_COMMAND',
       `npm ${args.join(SPACE)}`,
       cwd,
-      err.stack
+      err.message,
+      err.stderr
     )
   }
 }
