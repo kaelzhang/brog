@@ -21,10 +21,10 @@ const {
 } = require('../../src/upgrade')
 const {error} = require('../../src/error')
 
-const checkChanges = changed => changed.forEach(({
+const checkChanges = (changed, fail) => changed.forEach(({
   hasUncommitted,
   project
-}, fail) => {
+}) => {
   if (hasUncommitted) {
     fail('HAS_UNCOMMITTED', project.path)
   }
