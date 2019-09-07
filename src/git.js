@@ -20,7 +20,7 @@ const git = async (args, cwd) => {
 
     throw error(
       'ERR_NPM_COMMAND',
-      `npm ${args.join(SPACE)}`,
+      `git ${args.join(SPACE)}`,
       cwd,
       err.message,
       err.stderr
