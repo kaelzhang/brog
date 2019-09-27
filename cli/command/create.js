@@ -17,6 +17,9 @@ module.exports = class CreateCommand extends Command {
   constructor () {
     super()
 
+    this.usage = `brog create [options]
+brog create <name> [options]`
+
     this.options = {
       name: options.name,
       use: {
