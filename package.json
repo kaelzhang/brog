@@ -1,6 +1,6 @@
 {
   "name": "brog",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A tool for managing multiple related JavaScript projects, the better replacement of lerna",
   "bin": {
     "brog": "bin/cli.js"
@@ -44,16 +44,16 @@
   },
   "devDependencies": {
     "@ostai/eslint-config": "^3.5.0",
-    "ava": "^2.3.0",
-    "codecov": "^3.5.0",
-    "eslint": "^6.3.0",
+    "ava": "^2.4.0",
+    "codecov": "^3.6.1",
+    "eslint": "^6.4.0",
     "eslint-plugin-import": "^2.18.2",
     "nyc": "^14.1.1",
     "test-fixture": "^2.4.1"
   },
   "dependencies": {
-    "bin-tool": "^2.0.0",
-    "comment-json": "^2.1.0",
+    "bin-tool": "^2.2.2",
+    "comment-json": "^2.2.0",
     "core-util-is": "^1.0.2",
     "err-object": "^5.1.4",
     "execa": "^2.0.4",
